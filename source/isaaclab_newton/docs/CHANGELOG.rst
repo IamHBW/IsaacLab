@@ -1,6 +1,30 @@
 Changelog
 ---------
 
+0.5.9 (2026-03-16)
+~~~~~~~~~~~~~~~~~~
+
+Fixed
+^^^^^
+
+* Fixed ``test_body_incoming_joint_wrench_b_single_joint`` computing the expected
+  wrench in the parent body's frame instead of the child body's frame. The expected
+  wrench is now expressed in the child body's own frame and body indices are resolved
+  by name to be robust across backends.
+
+
+0.5.9 (2026-03-13)
+~~~~~~~~~~~~~~~~~~
+
+Fixed
+^^^^^
+
+* Fixed overly tight numerical tolerances in
+  ``test_object_state_properties`` for
+  :class:`~isaaclab_newton.assets.RigidObjectCollection` that caused
+  spurious failures on CPU. Aligned tolerances with the equivalent
+  rigid object test (``test_rigid_object.py``, ``atol=2e-3, rtol=2e-3``).
+
 
 0.5.8 (2026-03-13)
 ~~~~~~~~~~~~~~~~~~
