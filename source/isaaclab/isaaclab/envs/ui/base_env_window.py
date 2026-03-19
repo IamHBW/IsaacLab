@@ -54,6 +54,7 @@ class BaseEnvWindow:
         """
         # store inputs
         self.env = env
+        self.ui_window = None
         # prepare the list of assets that can be followed by the viewport camera
         # note that the first two options are "World" and "Env" which are special cases
         self._viewer_assets_options = [
@@ -100,9 +101,10 @@ class BaseEnvWindow:
     def __del__(self):
         """Destructor for the window."""
         # destroy the window
-        if self.ui_window is not None:
-            self.ui_window.visible = False
-            self.ui_window.destroy()
+        ui_window = getattr(self, "ui_window", None)
+        if ui_window is not None:
+            ui_window.visible = False
+            ui_window.destroy()
             self.ui_window = None
 
     """

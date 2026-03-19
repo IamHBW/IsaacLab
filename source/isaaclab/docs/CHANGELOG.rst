@@ -1,6 +1,21 @@
 Changelog
 ---------
 
+4.5.26 (2026-04-06)
+~~~~~~~~~~~~~~~~~~~
+
+Fixed
+^^^^^
+
+* Fixed compatibility for environments still reading the legacy
+  ``/isaaclab/visualizer`` setting. Isaac Lab now mirrors resolved
+  visualizer enablement to that key so visualizer-only runs continue
+  to render correctly when using :class:`~isaaclab.sim.SimulationContext`.
+* Fixed :class:`~isaaclab.envs.ui.base_env_window.BaseEnvWindow` cleanup after
+  partial initialization failures so teardown no longer raises ``AttributeError``
+  when the UI window was never created.
+
+
 4.5.25 (2026-04-01)
 ~~~~~~~~~~~~~~~~~~~
 
@@ -32,7 +47,6 @@ Fixed
   for floating-base articulations. Replaced with ``self._jacobi_joint_idx`` which correctly
   applies the +6 offset for floating-base robots and is identical to ``self._joint_ids`` for
   fixed-base robots.
-
 
 4.5.23 (2026-03-16)
 ~~~~~~~~~~~~~~~~~~~
