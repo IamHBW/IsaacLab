@@ -79,3 +79,6 @@ tests/
 
 # Ruff cache
 **/.ruff_cache/
+.vscode/browse.vc.db
+.vscode/browse.vc.db-shm
+.vscode/browse.vc.db-wal
