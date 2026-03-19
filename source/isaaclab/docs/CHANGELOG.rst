@@ -1,6 +1,21 @@
 Changelog
 ---------
 
+4.5.23 (2026-03-19)
+~~~~~~~~~~~~~~~~~~~
+
+Fixed
+^^^^^
+
+* Fixed compatibility for environments still reading the legacy
+  ``/isaaclab/visualizer`` setting. Isaac Lab now mirrors resolved
+  visualizer enablement to that key so visualizer-only runs continue
+  to render correctly when using :class:`~isaaclab.sim.SimulationContext`.
+* Fixed :class:`~isaaclab.envs.ui.base_env_window.BaseEnvWindow` cleanup after
+  partial initialization failures so teardown no longer raises ``AttributeError``
+  when the UI window was never created.
+
+
 4.5.22 (2026-03-16)
 ~~~~~~~~~~~~~~~~~~~
 

@@ -34,6 +34,17 @@ class _FakeProvider:
         self.update_calls.append(env_ids)
 
 
+class _FakeSettingsHelper:
+    def __init__(self, values: dict[str, Any] | None = None):
+        self.values = {} if values is None else dict(values)
+
+    def set(self, name: str, value: Any) -> None:
+        self.values[name] = value
+
+    def get(self, name: str) -> Any:
+        return self.values.get(name)
+
+
 class _FakeVisualizer:
     def __init__(
         self,
@@ -430,6 +441,46 @@ def test_is_rendering_false_when_cli_disable_all_even_with_cfg_visualizer():
     }
     ctx = _make_context_with_settings(settings, visualizer_cfgs=[cfg_visualizer])
     assert ctx.is_rendering is False
+
+
+def test_sync_legacy_visualizer_setting_tracks_cfg_visualizers():
+    cfg_visualizer = type("CfgVisualizer", (), {"visualizer_type": "newton"})()
+    cfg = type("Cfg", (), {"visualizer_cfgs": [cfg_visualizer]})()
+
+    ctx = object.__new__(SimulationContext)
+    ctx.cfg = cfg
+    ctx._settings_helper = _FakeSettingsHelper(
+        {
+            "/isaaclab/visualizer/types": "",
+            "/isaaclab/visualizer/explicit": False,
+            "/isaaclab/visualizer/disable_all": False,
+        }
+    )
+
+    ctx._sync_legacy_visualizer_setting()
+
+    assert ctx.get_setting("/isaaclab/visualizer") is True
+
+
+def test_set_setting_updates_legacy_visualizer_flag_for_cli_visualizers():
+    cfg = type("Cfg", (), {"visualizer_cfgs": []})()
+
+    ctx = object.__new__(SimulationContext)
+    ctx.cfg = cfg
+    ctx._settings_helper = _FakeSettingsHelper(
+        {
+            "/isaaclab/visualizer/types": "",
+            "/isaaclab/visualizer/explicit": False,
+            "/isaaclab/visualizer/disable_all": False,
+        }
+    )
+
+    ctx.set_setting("/isaaclab/visualizer/explicit", True)
+    ctx.set_setting("/isaaclab/visualizer/types", "rerun")
+    assert ctx.get_setting("/isaaclab/visualizer") is True
+
+    ctx.set_setting("/isaaclab/visualizer/disable_all", True)
+    assert ctx.get_setting("/isaaclab/visualizer") is False
 
 
 def test_explicit_unknown_visualizer_type_raises():

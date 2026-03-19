@@ -213,7 +213,7 @@ class DirectRLEnvWarp(DirectRLEnv):
         # extend UI elements
         # we need to do this here after all the managers are initialized
         # this is because they dictate the sensors and commands right now
-        if bool(self.sim.settings.get("/isaaclab/visualizer")) and self.cfg.ui_window_class_type is not None:
+        if self._should_create_ui_window():
             self._window = self.cfg.ui_window_class_type(self, window_name="IsaacLab")
         else:
             # if no window, then we don't need to store the window
@@ -321,6 +321,10 @@ class DirectRLEnvWarp(DirectRLEnv):
         """The maximum episode length in steps adjusted from s."""
         return math.ceil(self.max_episode_length_s / (self.cfg.sim.dt * self.cfg.decimation))
 
+    def _should_create_ui_window(self) -> bool:
+        """Return whether the environment should create a Kit UI window."""
+        return self.sim.has_gui and self.cfg.ui_window_class_type is not None
+
     @property
     def episode_length_buf(self) -> torch.Tensor:
         """The episode length buffer as a torch tensor.
@@ -417,8 +421,7 @@ class DirectRLEnvWarp(DirectRLEnv):
 
         # check if we need to do rendering within the physics loop
         # note: checked here once to avoid multiple checks within the loop
-        _has_rtx = hasattr(self.sim, "has_rtx_sensors") and self.sim.has_rtx_sensors()
-        is_rendering = bool(self.sim.settings.get("/isaaclab/visualizer")) or _has_rtx
+        is_rendering = self.sim.is_rendering
 
         # perform physics stepping
         with Timer(name="physics_loop", msg="Physics loop took:", enable=DEBUG_TIMERS):

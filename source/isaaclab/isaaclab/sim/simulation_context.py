@@ -165,6 +165,7 @@ class SimulationContext:
         self.physics_manager: type[PhysicsManager] = self._physics.class_type
         self.physics_manager.initialize(self)
         self._apply_render_cfg_settings()
+        self._sync_legacy_visualizer_setting()
 
         # Initialize visualizer state (provider/visualizers are created lazily during initialize_visualizers()).
         self._scene_data_provider: BaseSceneDataProvider | None = None
@@ -763,10 +764,16 @@ class SimulationContext:
     def set_setting(self, name: str, value: Any) -> None:
         """Set a setting value."""
         self._settings_helper.set(name, value)
+        if name.startswith("/isaaclab/visualizer/") and name != "/isaaclab/visualizer/max_worlds":
+            self._sync_legacy_visualizer_setting()
 
     def get_setting(self, name: str) -> Any:
         """Get a setting value."""
         return self._settings_helper.get(name)
+
+    def _sync_legacy_visualizer_setting(self) -> None:
+        """Mirror resolved visualizer enablement to the legacy setting path."""
+        self._settings_helper.set("/isaaclab/visualizer", bool(self.resolve_visualizer_types()))
 
     @classmethod
     def clear_instance(cls) -> None:

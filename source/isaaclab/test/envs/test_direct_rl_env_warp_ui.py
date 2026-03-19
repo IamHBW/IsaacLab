@@ -1,0 +1,20 @@
+# Copyright (c) 2022-2026, The Isaac Lab Project Developers (https://github.com/isaac-sim/IsaacLab/blob/main/CONTRIBUTORS.md).
+# All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+from isaaclab.envs.ui.base_env_window import BaseEnvWindow
+from isaaclab_experimental.envs.direct_rl_env_warp import DirectRLEnvWarp
+
+
+def test_direct_rl_env_warp_ui_window_requires_gui():
+    env = object.__new__(DirectRLEnvWarp)
+    env.sim = type("Sim", (), {"has_gui": False})()
+    env.cfg = type("Cfg", (), {"ui_window_class_type": object})()
+
+    assert env._should_create_ui_window() is False
+
+
+def test_base_env_window_destructor_tolerates_partial_initialization():
+    window = object.__new__(BaseEnvWindow)
+    window.__del__()
