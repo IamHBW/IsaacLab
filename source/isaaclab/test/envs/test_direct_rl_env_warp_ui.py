@@ -3,8 +3,9 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-from isaaclab.envs.ui.base_env_window import BaseEnvWindow
 from isaaclab_experimental.envs.direct_rl_env_warp import DirectRLEnvWarp
+
+from isaaclab.envs.ui.base_env_window import BaseEnvWindow
 
 
 def test_direct_rl_env_warp_ui_window_requires_gui():
